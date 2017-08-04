@@ -14,5 +14,5 @@
     "eject": "react-scripts eject",
     "deploy": "echo 'TODO: build app and move to server folder'"
   },
-  "proxy": "http://localhost:4000",
+  "proxy": "http://localhost:4000"
 }
