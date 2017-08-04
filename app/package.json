@@ -12,7 +12,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "echo 'TODO: build app and move to server folder'"
+    "deploy": "rimraf ../server/public && mkdir ../server/public && cp -R build/* ../server/public/"
   },
-  "proxy": "http://localhost:4000"
+  "proxy": "http://localhost:4000",
+  "devDependencies": {
+    "rimraf": "^2.6.1"
+  }
 }
