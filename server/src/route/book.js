@@ -36,9 +36,15 @@ router.get('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     console.log('deleting book => ', req.params.id);
 
-    Book.deleteOne({ _id: req.params.id })
-        .then(() => {
-            // TODO clear up refs in checked out books if they exist
+    Book.findById(req.params.id)
+        .then(book => {
+            if (!book) { throw 'No book'; }
+
+            if (book.checkedOut.length) {
+                throw 'Cannot delete a book that is currently checked out';
+            }
+
+            return Book.deleteOne({ _id: req.params.id })
         })
         .then(() => res.status(204).send())
         .catch(err => res.status(404).send(err));

@@ -24,7 +24,7 @@ const memberSchema = mongoose.Schema({
 });
 
 memberSchema.methods.fullName = function() {
-    return `${this.firstName} ${this.lastName}`;
+    return `${this.name.first} ${this.name.last}`;
 }
 
 const Member = mongoose.model('Member', memberSchema);

@@ -32,9 +32,15 @@ router.get('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     console.log('Deleting member => ', req.params.id);
 
-    Member.deleteOne({ _id: req.params.id })
-        .then(() => {
-            // TODO remove from checked out book lists
+    Member.findById(req.params.id)
+        .then(member => {
+            if (!member) { throw 'No member'; }
+
+            if (member.checkedOut.length) {
+                throw 'Cannot delete a member that currently has books checked out';
+            }
+
+            return Member.deleteOne({ _id: req.params.id })
         })
         .then(() => res.status(204).send())
         .catch(err => res.status(404).send());
@@ -47,6 +53,11 @@ router.patch('/:id', (req, res) => {
     // make sure we aren't trying to update checkout information
     if (req.body.checkedOut) {
         res.status(400).send('Cannot edit check out information in this fashion');
+        return;
+    }
+
+    if (req.body.libraryCardNumber) {
+        res.status(400).send('Library card number cannot be changed');
         return;
     }
 
@@ -64,6 +75,7 @@ router.patch('/:id', (req, res) => {
                 return Book.updateMany({ "checkedOut.by.id": member._id}, { "checkedOut.$.by.name": member.fullName() });
             }
         })
+        .then(() => res.status(204).send())
         .catch(err => res.status(404).send());
 });
 
