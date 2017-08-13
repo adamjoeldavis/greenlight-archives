@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const app = express();
 const path = require('path');
 const connection = require('./db/connection');
+const bookRouter = require('./route/book');
 
 connection.initialize();
 
@@ -17,6 +18,8 @@ app.use(express.static(publicPath));
 app.get('*', (req, res) => {
 	res.sendFile(`${publicPath}/index.html`);
 });
+
+app.use('/books', bookRouter);
 
 const server = app.listen(4000, () => {
 	console.log(`Server started! Listening...`);

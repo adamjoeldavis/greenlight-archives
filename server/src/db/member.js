@@ -15,8 +15,17 @@ const memberSchema = mongoose.Schema({
         state: Type.String,
         postalCode: Type.Number
     },
-    libraryCardNumber: Type.Number
+    libraryCardNumber: Type.Number,
+    checkedOut: [{
+        id: Type.ObjectId,
+        title: Type.String,
+        date: Type.Date
+    }]
 });
+
+memberSchema.methods.fullName = function() {
+    return `${this.firstName} ${this.lastName}`;
+}
 
 const Member = mongoose.model('Member', memberSchema);
 
