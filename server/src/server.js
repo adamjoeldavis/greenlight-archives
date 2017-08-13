@@ -1,10 +1,14 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const app = express();
 const path = require('path');
 
 // resolved path to the base of the compiled client
 const publicPath = path.resolve(`${__dirname}/../public`);
 
+app.use(bodyParser.json());
+app.use(morgan('combined'));
 app.use(express.static(publicPath));
 
 app.get('*', (req, res) => {
