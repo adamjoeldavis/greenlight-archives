@@ -5,6 +5,7 @@ const app = express();
 const path = require('path');
 const connection = require('./db/connection');
 const bookRouter = require('./route/book');
+const memberRouter = require('./route/member');
 
 connection.initialize();
 
@@ -20,6 +21,7 @@ app.get('*', (req, res) => {
 });
 
 app.use('/books', bookRouter);
+app.use('/member', memberRouter);
 
 const server = app.listen(4000, () => {
 	console.log(`Server started! Listening...`);
