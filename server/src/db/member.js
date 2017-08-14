@@ -16,11 +16,20 @@ const memberSchema = mongoose.Schema({
         postalCode: Type.Number
     },
     libraryCardNumber: Type.Number,
+    active: { type: Type.Boolean, default: true },
     checkedOut: [{
         id: Type.ObjectId,
         title: Type.String,
         date: Type.Date
     }]
+});
+
+memberSchema.index({
+    "name.first": "text",
+    "name.last": "text",
+    "emailAddress": "text",
+    "phoneNumber": "text",
+    "libraryCardNumber": "text"
 });
 
 memberSchema.methods.fullName = function() {

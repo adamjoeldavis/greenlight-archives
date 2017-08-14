@@ -22,9 +22,9 @@ app.get('*', (req, res) => {
 	res.sendFile(`${publicPath}/index.html`);
 });
 
-app.use('api/books', bookRouter);
-app.use('api/member', memberRouter);
-app.use('api/checkOut', checkOutRouter);
+app.use('/api/books', bookRouter);
+app.use('/api/members', memberRouter);
+app.use('/api/checkOut', checkOutRouter);
 
 const server = app.listen(4000, () => {
 	console.log(`Server started! Listening...`);

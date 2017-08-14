@@ -4,13 +4,30 @@ const Book = require('../db/book');
 
 const router = express.Router();
 
+const buildMongoQuery = (query) => {
+    const mongoQuery = {};
+
+    if (query.text) {
+        mongoQuery.$text = { $search: query.text };
+    }
+
+    if (query.status == 1) { // current
+        mongoQuery.active = true;
+    } else if (query.status == 2) { // overdue
+        const oldestNonOverdue = moment().subtract(3, 'weeks');
+        mongoQuery['checkedOut.date'] = { $lt: oldestNonOverdue };
+    }
+    
+    return mongoQuery;
+}
+
 // list
 router.get('/', (req, res) => {
-    const query = req.body;
+    const query = req.query;
 
     console.log('member query => ', query);
 
-    Member.find() // TODO hook in query
+    Member.find(buildMongoQuery(query))
         .then(members => res.send(members))
         .catch(err => res.status(400).send(err));
 });
@@ -64,6 +81,10 @@ router.patch('/:id', (req, res) => {
     Member.findById(req.params.id)
         .then(member => {
             if (!member) { throw 'No member'; }
+
+            if (req.body.active != undefined && !req.body.active && member.checkedOut.length > 0) {
+                throw 'Cannot deactivate a member with checked out books';
+            }
 
             member.set(req.body);
 

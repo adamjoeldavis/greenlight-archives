@@ -14,6 +14,7 @@ const bookSchema = mongoose.Schema({
     summary: Type.String,
     // TODO add image if time
     instanceCount: { type: Type.Number, default: 1 },
+    availableCount: { type: Number, default: 1 },
     checkedOut: [{
         date: Type.Date,
         by: {
@@ -22,6 +23,24 @@ const bookSchema = mongoose.Schema({
         }
     }]
 });
+
+bookSchema.index({
+    title: 'text',
+    summary: 'text',
+    'author.name.first': 'text',
+    'author.name.last': 'text'
+});
+
+bookSchema.methods.computeAvailableCount = function() {
+    this.availableCount = this.instanceCount - this.checkedOut.length;
+}
+
+// apply the available count before every save so it is always up to date
+bookSchema.pre('save', function(next) {
+    this.computeAvailableCount();
+
+    next();
+})
 
 const Book = mongoose.model('Book', bookSchema);
 

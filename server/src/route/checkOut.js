@@ -74,12 +74,12 @@ router.delete('/:bookId/:memberId', (req, res) => {
 
             member = _member;
 
-            member.checkedOut = member.checkedOut.filter(element => element.id !== book._id);
+            member.checkedOut = member.checkedOut.filter(element => !element.id.equals(book._id));
 
             return member.save();
         })
         .then(() => {
-            book.checkedOut = book.checkedOut.filter(element => element.by.id !== member._id);
+            book.checkedOut = book.checkedOut.filter(element => !element.by.id.equals(member._id));
 
             return book.save();
         })
