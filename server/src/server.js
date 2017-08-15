@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const app = express();
 const path = require('path');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const cors = require('cors');
 
 const connection = require('./db/connection');
 const bookRouter = require('./route/book');
@@ -14,6 +17,7 @@ connection.initialize();
 // resolved path to the base of the compiled client
 const publicPath = path.resolve(`${__dirname}/../public`);
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 app.use(express.static(publicPath));
