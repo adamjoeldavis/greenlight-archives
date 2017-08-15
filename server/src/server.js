@@ -7,6 +7,7 @@ const publicPath = path.resolve(`${__dirname}/../public`);
 
 app.use(express.static(publicPath));
 
+// make sure this route is the last one in the list, or else API calls will not work
 app.get('*', (req, res) => {
 	res.sendFile(`${publicPath}/index.html`);
 });
